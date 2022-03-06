@@ -34,6 +34,8 @@ def addEmptyHoursRows(i_df, i_lstHours):
             i_df.loc[hour] = [0, 0, 0, 0, 0, 0, 0]
 
 
+# def main():
+
 
 parsedData = []  # List to keep track of data so it can be used by a Pandas dataframe
 ### Uploading exported chat file
@@ -55,7 +57,7 @@ df = pd.DataFrame(parsedData, columns=['Date', 'Time'])  # Initialising a pandas
 ### changing datatype of "Date" column.
 df["Date"] = pd.to_datetime(df["Date"])
 
-df.isnull().sum()  # Checking no. of null values in dataset
+# df.isnull().sum()  # Checking no. of null values in dataset
 ### Droping Nan values from dataset
 df = df.dropna()
 df = df.reset_index(drop=True)
@@ -105,16 +107,22 @@ for i in range(00, 23, 2):
 addEmptyHoursRows(heatmap_data, lst_hours)
 heatmap_data = heatmap_data.sort_values(by=['Hours'], ascending=False)
 
+print(heatmap_data)
 
+# def changeTo2HoursScale
+for index in heatmap_data.index.values.tolist():
+    if int(index) % 2 == 0:
+        continue
+    else:
+        for day in day_of_week:
+            heatmap_data[day][int(index)] += heatmap_data[day][int(index) - 1]
+
+for index in heatmap_data.index.values.tolist():
+    if int(index) % 2 == 0:
+        heatmap_data = heatmap_data.drop(heatmap_data.index[int(index)])
 
 print(heatmap_data)
 
-# plt.pcolor(heatmap_data)
-# # plt.plasma()
-# # plt.yscale('linear', yAxis)
-# plt.yticks(np.arange(0.5, len(heatmap_data.index), 1), heatmap_data.index)
-# plt.xticks(np.arange(0.5, len(heatmap_data.columns), 1), heatmap_data.columns)
-# plt.show()
 
 plt.figure('WhatsApp Heatmap', figsize=(10, 6))
 sns.heatmap(
@@ -122,13 +130,10 @@ sns.heatmap(
     cmap='OrRd',
     annot=True,
     fmt='.0f',
-    annot_kws={'fontsize': 6}
-    # x=df['Day'],
-    # y=df['Hours'],
-    # size_scale=500,
-    # size=df['#Messages'],
-    # y_order=day_of_week[::-1],
-    # color=df["#Messages"],
-    # palette=sns.cubehelix_palette(128)
+    annot_kws={'fontsize': 6},
 )
+
 plt.show()
+
+# if __name__ == "__main__":
+#     main()
