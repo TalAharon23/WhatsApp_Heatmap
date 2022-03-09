@@ -112,6 +112,7 @@ def changeTo2HoursScale(i_heatmap_data):
 def createHeatmap(i_heatmap_data):
     # Creating the heatmap window.
     plt.figure('WhatsApp Heatmap', figsize=(10, 6))
+    plt.title("WhatsApp Heatmap", color='purple', size=16)
     sns.heatmap(
         data=i_heatmap_data,
         cmap='OrRd',
