@@ -8,5 +8,8 @@ Working with Python and these useful libraries in combination with Git, has cont
 In addition, this project made me intrested in Data Science and as a result of that i'll continue to learn and dive deeper into this subject. 
 
 ## How to use?
-* Export your WhatsApp group chat (WhatsApp.txt file)
-* 
+* Export your WhatsApp group chat and **rename** it to `WhatsApp.txt` file.
+* Put the WhatsApp text file in the project folder.
+* Open `main.py` file and see the results. 
+* Example:
+![image](https://user-images.githubusercontent.com/82831070/157841360-e3c0a5df-25ed-4ea2-b692-70b695559387.png)
