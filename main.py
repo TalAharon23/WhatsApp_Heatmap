@@ -3,7 +3,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import re
 
-
 # Consts:
 DAYS = {
     0: 'Monday',
@@ -33,7 +32,7 @@ def startsWithDateAndTime(i_starting_line):
 
 
 def addEmptyHoursRows(i_df, i_lstHours):
-    # Adding new rows with zeros (represents the hours with no messages in all days)
+    # Adding new rows with zeros (represents the hours with no messages in all Weekdays)
     currDFHours = i_df.index.values.tolist()
     for hour in i_lstHours:
         if hour not in currDFHours:
@@ -55,7 +54,7 @@ def creatingDFFromFile(i_filePath):
                 date, time = getDataPoint(line)
                 parsedData.append([date, time])
 
-    df = pd.DataFrame(parsedData, columns=['Date', 'Time'])  # Initialising a pandas Dataframe.
+    df = pd.DataFrame(parsedData, columns=['Date', 'Time'])  # Initializing a pandas Dataframe.
     # changing datatype of "Date" column.
     df["Date"] = pd.to_datetime(df["Date"])
 
@@ -63,8 +62,8 @@ def creatingDFFromFile(i_filePath):
     df = df.dropna()
     df = df.reset_index(drop=True)
 
-    df['Day'] = df['Date'].dt.weekday.map(DAYS)  # matches date with corresponded day to a new column
-    df = df[['Date', 'Day', 'Time']]  # rearranging df columns
+    df['Weekdays'] = df['Date'].dt.weekday.map(DAYS)  # matches date with corresponded day to a new column
+    df = df[['Date', 'Weekdays', 'Time']]  # rearranging df columns
     return df
 
 
@@ -73,22 +72,22 @@ def arrangeDFByHours(i_df):
     for i in i_df['Time']:  # e.g: '16:24'
         lst.append(i.split(':')[0])  # lst: 16,22,00,.... (Hours list)
 
-    i_df['Hours'] = lst  # adding new hours column
-    i_df = i_df.groupby(['Hours', 'Day'], as_index=False)['Time'].count()  # summarize num of messages in each hour
-    # on each day.
+    i_df['Hour'] = lst  # adding new hour column
+    i_df = i_df.groupby(['Hour', 'Weekdays'], as_index=False)['Time'].count()  # summarize num of messages in each hour
+    # on each Weekday.
     i_df = i_df.rename(columns={"Time": "#Messages"})
     return i_df
 
 
 def createHeatmapData(i_df):
-    # Create a matrix ( yAxis - Hours, xAxis - Days, values: #messages )
-    heatmap_data = i_df.pivot(index='Hours', columns='Day', values='#Messages')
+    # Create a matrix ( yAxis - Hour, xAxis - Weekdays, values: #messages )
+    heatmap_data = i_df.pivot(index='Hour', columns='Weekdays', values='#Messages')
     heatmap_data = heatmap_data.fillna(0)  # replace nan values with 0.
     heatmap_data = heatmap_data[
         [DAYS[6], DAYS[0], DAYS[1], DAYS[2], DAYS[3], DAYS[4], DAYS[5]]]  # Reorder the days columns sequence
 
     addEmptyHoursRows(heatmap_data, HOURS)  # Adding rows with zero to hours with no messages.
-    heatmap_data = heatmap_data.sort_values(by=['Hours'], ascending=False)
+    heatmap_data = heatmap_data.sort_values(by=['Hour'], ascending=False)
     heatmap_data = changeTo2HoursScale(heatmap_data)
     return heatmap_data
 
@@ -112,7 +111,9 @@ def changeTo2HoursScale(i_heatmap_data):
 def createHeatmap(i_heatmap_data):
     # Creating the heatmap window.
     plt.figure('WhatsApp Heatmap', figsize=(10, 6))
-    plt.title("WhatsApp Heatmap", color='purple', size=16)
+    plt.title("WhatsApp Heatmap", color='#CD3333', size=16, fontstyle='oblique', fontweight='bold')
+    plt.gca().xaxis.label.set_size(14)
+    plt.gca().yaxis.label.set_size(14)
     sns.heatmap(
         data=i_heatmap_data,
         cmap='OrRd',
@@ -131,7 +132,6 @@ def main():
     df = arrangeDFByHours(df)
     heatmap_dataTable = createHeatmapData(df)
     createHeatmap(heatmap_dataTable)
-    print(heatmap_dataTable)
 
 
 if __name__ == "__main__":
