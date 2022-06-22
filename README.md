@@ -1,4 +1,4 @@
-# WhatsApp Heatmap
+# WhatsApp Heatmap  &nbsp;&nbsp; <img alt="C#" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white">
 #### Analysis and describes the level of WhatsApp group activity as function of the weekdays (in the x axis) and the hour (in the y axis).
 
 ## Description
